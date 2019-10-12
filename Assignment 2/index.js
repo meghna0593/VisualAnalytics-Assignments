@@ -1,14 +1,13 @@
-var headerOrg, headerUpdate, dataOrg;
+var dataOrg;
 //Dynamic File Upload from 'data' folder of this project directory
-function uploadFile(num){
+function uploadFile(num){	
 	document.getElementById('checkBoxDiv').innerHTML = '';	
 	if(num == 0){
 		msg = "<br>Selected CSV file is:winequality-red.csv<b>";
 		document.getElementById("msg").innerHTML = msg;	
 		retrieveCsvData("data/winequality-red.csv",num);
 	}
-	else{
-		console.log("inside num1");
+	else{		
 		var selectedFile = document.getElementById("csvFile");
 		var msg=""
 		if('files' in selectedFile){
@@ -27,32 +26,31 @@ function uploadFile(num){
 function retrieveCsvData(csvFile,num){
 	d3.csv(csvFile, function(error, data) {
 		if(error) throw(error);
-		headerOrg = headerUpdate= d3.keys(data[0]);
 		dataOrg = data
-		createCheckBoxes(headerUpdate,num)
+		createCheckBoxes(d3.keys(data[0]),num)
 		//sending data to create radviz graph with header details
-		sendData(headerUpdate);
+		sendData(d3.keys(data[0]));
 		
 	});
 }
 
-function updateAnchor(i){
-	console.log(i);
-	if(headerUpdate.filter(j=>j==headerOrg[i+1]).length == 0){
-		//adds one element back
-		headerUpdate = headerOrg.map(e=>e)
-	}
-	else{
-		//removes one element
-		headerUpdate = headerOrg.filter((e,idx)=>(idx!=i+1))	
-	}
-		
-	sendData(headerUpdate.slice(1))
+function updateAnchor(){
+	var checkedItems = document.getElementsByName('checkbx')
+	var headerUpdate = [];
+
+	for (var i=0; i<checkedItems.length; i++) {
+	   if (checkedItems[i].checked) {
+			headerUpdate.push(checkedItems[i].value);
+	   }
+	}		
+	sendData(headerUpdate);
 }
 
 function createCheckBoxes(labels,num){
-	var a = d3.select('#checkBoxDiv')
-	a.select('#checkBoxDiv')
+	d3.selectAll('label').remove() //clearing the checkbox on uploading different files
+	
+	chkBox = d3.select('#checkBoxDiv')
+	chkBox
 		.data(labels.slice(0,-1))
 		.enter()
 		.append('label')
@@ -63,9 +61,12 @@ function createCheckBoxes(labels,num){
 			.attr("checked", true)
 			.attr("type", "checkbox")
 			.attr("class","check")
-			.attr("id", function(d,i) { return 'a'+i; })
-			.on("click", function(d,i) { updateAnchor(i) });
-	
+			.attr("value",function(d,i) { return labels[i]; })
+			.attr("name","checkbx")
+			.attr("id", function(d,i) { return i; })
+			.on("click", function() { updateAnchor() });
+	console.log(document.getElementById('#checkBoxDiv'));
+
 }
 
 function sendData(header){
@@ -73,7 +74,6 @@ function sendData(header){
 	const radvizId = document.querySelector('#radviz');
 	const colorAccessor = function(d){ return d[header[header.length-1]]; }; //dimension used for coloring
 	const dimensions = header.slice(0,header.length-1) //does not contain the last column	
-	console.log(header[header.length-1]);
 	
 	renderRadviz()
 		.radvizDOM(radvizId)
