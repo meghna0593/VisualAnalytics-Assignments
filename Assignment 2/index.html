@@ -4,14 +4,21 @@
 <head>
 	<title>Assignment 2 : Radviz Implementation</title>
 	<link rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="./libs/bootstrap.min.css">
+	
 </head>
 
-<body>
-	<script src='index.js' defer></script>	
-	<script src='./libs/d3.min.js' defer></script>
-	<input type="file" id="csvFile" onchange="uploadFile()">
+<body onload="uploadFile(0)">
+	<script src='./libs/d3.min.js'></script>
+	<script src="./libs/jquery-2.1.4.min.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.23.1/babel.min.js' defer></script>
+		
+	<input type="file" id="csvFile" onchange="uploadFile(1)">
+	<div id="checkBoxDiv"></div>
 	<div id="msg"></div>
 	<!--Rendering Radviz Chart here-->
 	<div id="radviz">
-	</div>  
+	</div>
+	<script src='index.js'></script>	
+	<script src="./src/radviz-chart.js"></script>  
 </body>
