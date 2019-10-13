@@ -3,12 +3,13 @@ var dataOrg;
 function uploadFile(num){	
 	document.getElementById('checkBoxDiv').innerHTML = '';	
 	if(num == 0){
-		msg = "<br>Selected CSV file is:winequality-red.csv<b>";
+		msg = "<br>Selected CSV file is:<b>winequality-red.csv</b>";
 		document.getElementById("msg").innerHTML = msg;	
 		retrieveCsvData("data/winequality-red.csv",num);
 	}
 	else{		
 		var selectedFile = document.getElementById("csvFile");
+		document.getElementById('slider').value="100"
 		var msg=""
 		if('files' in selectedFile){
 			if(selectedFile.files.length==0)
@@ -35,7 +36,7 @@ function retrieveCsvData(csvFile,num){
 }
 
 function changeOpacity(){	
-	d3.selectAll('.circle-data')
+	d3.selectAll('.circle-dt')
 		.transition()
 		.duration(300)
 		.ease(d3.easeLinear)
@@ -65,8 +66,8 @@ function createCheckBoxes(labels,num){
 		.data(labels.slice(0,-1))
 		.enter()
 		.append('label')
-			.attr('for',function(d,i){ return 'a'+i; })
-			.attr("class","hello")
+			.attr('for',function(d,i){ return i; })
+			.attr("style","font-weight:normal !important;")
 			.text(function(d) { return d; })
 		.append("input")
 			.attr("checked", true)
@@ -82,7 +83,7 @@ function createCheckBoxes(labels,num){
 function sendData(header){
 	
 	const radvizId = document.querySelector('#radviz');
-	const colorAccessor = function(d){ return d[header[header.length-1]]; }; //dimension used for coloring
+	const colorAccessor = function(d){ return d[header[header.length-1]]; };
 	const dimensions = header.slice(0,header.length-1) //does not contain the last column	
 	
 	renderRadviz()
@@ -94,3 +95,15 @@ function sendData(header){
 		.call()
 
 }
+
+
+
+/*
+ * ***References***
+ *
+ * [1] Process local csv file example. (n.d.). Retrieved October 12, 2019, from http://bl.ocks.org/hlvoorhees/9d58e173825aed1e0218. 
+ * [2] File Upload TryIt Editor. (n.d.). Retrieved October 12, 2019, from https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_fileupload_files.
+ * [3] WYanChao. (n.d.). WYanChao/RadViz. Retrieved October 12, 2019, from https://github.com/WYanChao/RadViz/blob/master/index.js.
+ * [4] Biovisualize. (n.d.). biovisualize/radviz. Retrieved October 12, 2019, from https://github.com/biovisualize/radviz/blob/master/radviz.js.
+ * [5] How TO - Display Text when Checkbox is Checked. (n.d.). Retrieved October 12, 2019, from https://www.w3schools.com/howto/howto_js_display_checkbox_text.asp.
+ */
