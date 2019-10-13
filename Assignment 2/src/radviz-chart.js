@@ -8,7 +8,6 @@ function renderRadviz(){
     function mainRadviz(div){        
         //constant variables
         dimensionAnchor = Array.apply(null, {length: dimensions.length}).map(Number.call, Number).map(x=>x*2*Math.PI/(dimensions.length)); // intial DA configration;
-
         let	radiusDA = 6,
 			radiusDT = 4; // radius of DA and data points
         let nodecolor = d3.scaleOrdinal(d3.schemeCategory20); //set color scheme
@@ -49,18 +48,17 @@ function renderRadviz(){
         });
         
         let colorspace = [], colorclass = [];
-		data_new.forEach(function(d, i){            
+		data_new.forEach(function(d, i){  
 			if(colorspace.indexOf(d.color)<0) {                
 				colorspace.push(d.color); 
-				colorclass.push(d.class); }
+				colorclass.push(d[header[header.length-1]]); }
         });        
-
         d3.select("svg").remove(); //to clear svg content and update with new selection
 
         const radviz_svg = d3.select(radvizDOM);
 
         let svg = radviz_svg.append('svg').attr('id', 'radviz')
-			.attr('width', width)
+			.attr('width', 800)
 			.attr('height', height);						
 		svg.append('rect').attr('fill', 'transparent')
 			.attr('width', width)
@@ -121,6 +119,7 @@ function renderRadviz(){
                     /*Draw the legend: prepare data and then call drawLegend()*/
                     // plot the legend
                     drawLegend();
+
     
                     /* --------------- section --------------- */	
                     // subfunctions
@@ -202,7 +201,7 @@ function renderRadviz(){
                             .attr('dx', d => Math.cos(d.theta) * 15)
                             .attr('dy', d=>Math.sin(d.theta)<0?Math.sin(d.theta)*(15):Math.sin(d.theta)*(15)+ 10)
                             .text(d => d.name)
-                            .attr('font-size', '18pt');					
+                            .attr('font-size', '8pt');					
                     }//end of function drawDALabel
     
                     // subfunction --> drawDT(): draw the data points.
@@ -246,18 +245,19 @@ function renderRadviz(){
                             .attr('cx', xLegend)
                             .attr('cy', (d, i) => i*yLegend)
                             .attr('fill', d=>d);
+                        
                         let legendtexts = center.selectAll('text.legend').data(colorclass)
                             .enter().append('text').attr('class', 'legend')
                             .attr('x', xLegend + 2 * radiusDT)
                             .attr('y', (d, i) => i*yLegend+5)
-                            .text(d => d).attr('font-size', '16pt').attr('dominat-baseline', 'middle')
+                            .text(d => d).attr('font-size', '8pt').attr('dominat-baseline', 'middle')
                             .on('mouseover', function(d){
                                 //when mouse hover, other classes will be discolored.
                                 let tempa = d3.select(radvizDOM).selectAll('.circle-data');
                                 tempa.nodes().forEach((element) => {
                                     console.log(element);
                                     let tempb = element.getAttribute('id');
-                                    if (data_new[tempb].class != d) {
+                                    if (data_new[tempb][header[header.length-1]] != d) {
                                         d3.select(element).attr('fill-opacity', 0.2).attr('stroke-width', 0);
                                     }
                                 });
@@ -269,9 +269,11 @@ function renderRadviz(){
                             });					
                     }// end of function drawLegend()	
                 });// end of div.each(function(){})
-            } // end of function chart(div)
+            } // end of function chart(div)            
             return chart;
         }
+
+        
 
         function addNormalizedValues(data_new) {        
             data_new.forEach(function(d) {

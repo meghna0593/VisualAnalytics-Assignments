@@ -26,7 +26,7 @@ function uploadFile(num){
 function retrieveCsvData(csvFile,num){
 	d3.csv(csvFile, function(error, data) {
 		if(error) throw(error);
-		dataOrg = data
+		dataOrg = data1 = data
 		createCheckBoxes(d3.keys(data[0]),num)
 		//sending data to create radviz graph with header details
 		sendData(d3.keys(data[0]));
@@ -34,22 +34,33 @@ function retrieveCsvData(csvFile,num){
 	});
 }
 
-function updateAnchor(){
+function changeOpacity(){	
+	d3.selectAll('.circle-data')
+		.transition()
+		.duration(300)
+		.ease(d3.easeLinear)
+		.style("opacity", d3.select("#slider").property("value")/100);
+	}
+
+function updateAnchor(lastItem){
 	var checkedItems = document.getElementsByName('checkbx')
 	var headerUpdate = [];
-
+	console.log(data1[0]);
+	
 	for (var i=0; i<checkedItems.length; i++) {
 	   if (checkedItems[i].checked) {
 			headerUpdate.push(checkedItems[i].value);
 	   }
-	}		
+	}
+	console.log(lastItem);
+	headerUpdate.push(lastItem)	
 	sendData(headerUpdate);
 }
 
 function createCheckBoxes(labels,num){
 	d3.selectAll('label').remove() //clearing the checkbox on uploading different files
 	
-	chkBox = d3.select('#checkBoxDiv')
+	chkBox = d3.select('#checkBoxDiv').selectAll('label')
 	chkBox
 		.data(labels.slice(0,-1))
 		.enter()
@@ -64,8 +75,7 @@ function createCheckBoxes(labels,num){
 			.attr("value",function(d,i) { return labels[i]; })
 			.attr("name","checkbx")
 			.attr("id", function(d,i) { return i; })
-			.on("click", function() { updateAnchor() });
-	console.log(document.getElementById('#checkBoxDiv'));
+			.on("click", function() { updateAnchor(labels[labels.length-1]) });
 
 }
 

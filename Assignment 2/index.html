@@ -14,10 +14,11 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.23.1/babel.min.js' defer></script>
 		
 	<input type="file" id="csvFile" onchange="uploadFile(1)">
-	<div id="checkBoxDiv"></div>
 	<div id="msg"></div>
+	<div id="checkBoxDiv"></div> <br/>
+	<input id ="slider" type="range" onchange="changeOpacity()" min="0" max="100" value="100" style="width: 200px; margin-right: 10px;"/>
 	<!--Rendering Radviz Chart here-->
-	<div id="radviz">
+	<div id="radviz" style="display: flex; justify-content: center;">
 	</div>
 	<script src='index.js'></script>	
 	<script src="./src/radviz-chart.js"></script>  
