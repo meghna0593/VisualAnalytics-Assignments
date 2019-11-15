@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Assignment 2 : Meghna R Holla (B00812604)</title>
+	<link rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
+	
+	
+</head>
+
+<body onload="getData()">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/d3.min.js') }}"></script>
+	<!-- <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script> -->
+	<script type="text/javascript" src="{{ url_for('static', filename='js/radviz-chart.js') }}"></script>
+	<div class="container" style="width:95%">
+			<div class="row" style="margin-bottom: 10px;">
+					<div class="col-md-12" style="display: flex; justify-content: center;"><h2><b>Assignment 2 : Radviz Implementation</b> </h2></div>
+			</div>
+			<div class="row" style="margin-bottom: 10px;">
+					<div class="col-md-4">
+					<select id="data_options" onchange="getData()">
+						<option value="0">Iris</option>
+						<option value="1">Winequality-red</option>
+						<option value="2">Winequality-white</option>
+					</select></div>
+			</div>
+			<div class="row" style="margin-bottom: 10px;">
+					<div class="col-md-4"><div id="msg"></div></div>
+			</div>
+			<div class="row" style="margin-bottom: 10px;">
+					<div class="col-md-8"><div id="checkBoxDiv"></div></div>
+			</div>
+			<div class="row" style="margin-bottom: 10px;">
+				<div class="col-md-4" style="display: flex;">
+					<div class="left-label" style="margin-right: 6px;">0</div>
+					<input id ="slider" type="range" onchange="changeOpacity()" min="0" max="100" value="100" style="width: 200px; margin-right: 10px;"/>
+					<div class="right-label">1</div>
+				</div>
+			</div>
+			<div class="row" >
+				<div class="col-md-6" >
+					<!--Rendering Radviz Chart here-->
+					<div id="radviz">
+					</div>
+				</div>
+				<div class="col-md-6" >
+					Hello
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 10px;">
+				<div class="col-md-4"></div>
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<button id="defaultOption" onclick="uploadFile(0)">Default RadViz</button>
+					<button id="resetOption" onclick="resetChart()">Reset Anchor Positon</button>
+				</div>
+			</div>
+	</div>
+ 
+</body>
+
+</html>
+
+<!-- 
+ * ***References***
+ *
+ * [1] Process local csv file example. (n.d.). Retrieved October 12, 2019, from http://bl.ocks.org/hlvoorhees/9d58e173825aed1e0218. 
+ * [2] File Upload TryIt Editor. (n.d.). Retrieved October 12, 2019, from https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_fileupload_files.
+ * [3] WYanChao. (n.d.). WYanChao/RadViz. Retrieved October 12, 2019, from https://github.com/WYanChao/RadViz/blob/master/index.js.
+ * [4] Biovisualize. (n.d.). biovisualize/radviz. Retrieved October 12, 2019, from https://github.com/biovisualize/radviz/blob/master/radviz.js.
+ * [5] How TO - Display Text when Checkbox is Checked. (n.d.). Retrieved October 12, 2019, from https://www.w3schools.com/howto/howto_js_display_checkbox_text.asp.
+ *
+  -->
