@@ -1,5 +1,8 @@
 var dataOrg = []
 function getData() {
+	//to hide heatmap
+	var element = document.getElementById('heat-map')
+	element.style.visibility = 'hidden'
     var x = document.getElementById("data_options").value;
     console.log('/getCsv/'+x);
     var url = '/getCsv/'+x
@@ -17,8 +20,10 @@ function getData() {
 //Dynamic File Upload from 'data' folder of this project directory
 function uploadFile(num, dataX, dataC){	
 	
-  document.getElementById('checkBoxDiv').innerHTML = '';	
-  retrieveCsvData(dataC,num)
+    document.getElementById('checkBoxDiv').innerHTML = '';	
+	// msg = "<br>Selected CSV data is:<b>"+dataC[x]+"</b>";
+    // document.getElementById("msg").innerHTML = msg;
+    retrieveCsvData(dataC,num)
 	// if(num == 0){
 	// 	console.log("inside");
 		
@@ -84,6 +89,8 @@ function updateAnchor(lastItem){
 }
 
 function createCheckBoxes(labels,num){
+	console.log(labels);
+	
 	d3.selectAll('label').remove() //clearing the checkbox on uploading different files
 	
 	chkBox = d3.select('#checkBoxDiv').selectAll('label')
