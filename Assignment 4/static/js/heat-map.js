@@ -1,5 +1,6 @@
 function callHeatMap(cls, fname){
-
+    console.log(cls);
+    
     var url = '/getCorrMat?col='+cls+'&file='+fname;
     console.log(url);
     

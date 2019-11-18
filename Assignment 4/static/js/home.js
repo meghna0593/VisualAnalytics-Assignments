@@ -1,25 +1,30 @@
 var dataOrg = []
-function getData() {
+function getData(btn) {
 	//to hide heatmap
 	var element = document.getElementById('heat-map')
 	element.style.visibility = 'hidden'
+	document.getElementById('clusternum').value=''
     var x = document.getElementById("data_options").value;
+	if (btn===2){
+		x=0
+		document.getElementById("data_options").value = String(0)		 
+	}
     console.log('/getCsv/'+x);
     var url = '/getCsv/'+x
     fetch(url)
     .then((resp)=>resp.json())
-    .then(function(data){
-      // console.log(data['metadata']);
-      dataOrg = JSON.parse(data['data'])
-      // data.shift()  {fixed acidity: 7.4, volatile acidity: 0.7, citric acid: 0, residual sugar: 1.9, chlorides: 0.076, …}
-      uploadFile(x,JSON.parse(data['data']),data['metadata'])
+    .then(function(data){		
+	dataOrg = JSON.parse(data['data'])
+
+	// data.shift()  {fixed acidity: 7.4, volatile acidity: 0.7, citric acid: 0, residual sugar: 1.9, chlorides: 0.076, …}
+	uploadFile(x,JSON.parse(data['data']),data['metadata'])
     })
   }
 
-  var dataOrg;
 //Dynamic File Upload from 'data' folder of this project directory
 function uploadFile(num, dataX, dataC){	
-	
+
+	dataOrg = dataX
     document.getElementById('checkBoxDiv').innerHTML = '';	
 	// msg = "<br>Selected CSV data is:<b>"+dataC[x]+"</b>";
     // document.getElementById("msg").innerHTML = msg;

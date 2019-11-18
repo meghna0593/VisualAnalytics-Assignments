@@ -1,5 +1,4 @@
 function renderRadviz(){
-    console.log("Inside radviz");
     
     let radvizDOM,
         data,
@@ -204,12 +203,14 @@ function renderRadviz(){
                             .attr('stroke', 'black')
                             .attr('stroke-width', 0.3)
                             .on('mouseenter', function(d) {
-                                // console.log(d['Class']);
+                                console.log(d['target']);
                                 let mouse = d3.mouse(this); 
                                 let toolTip = svg.select('g.toolTip').selectAll('text').text(function(dt, i){
                                     return dt + ': ' + d[dt];
                                 }); 
-                                
+                                var element = document.getElementById('heat-map')
+	                            element.style.visibility = 'visible'
+                                callHeatMap((d['target']===undefined)?(d['Class']===undefined)?d['quality']:d['Class']:d['target'],document.getElementById("data_options").value)
                                 svg.select('g.toolTip').attr('transform',  `translate(${margin.left + mouse[0] +20},${margin.top+mouse[1] - 120})`);
 
                                 svg.select('g.toolTip').attr('display', 'block');
@@ -217,16 +218,14 @@ function renderRadviz(){
                                 d3.select(this).raise().transition().attr('r', dimDataPointRadius*2).attr('stroke-width', 2);		
                             })
                             .on('mouseout', function(d) {
-                                var element = document.getElementById('heat-map')
-	                            element.style.visibility = 'visible'
-                                callHeatMap((d['Class']===undefined)?d['quality']:d['Class'],document.getElementById("data_options").value)
+                                
                                 svg.select('g.toolTip').attr('display', 'none');
 
                                 d3.select(this).transition().attr('r', dimDataPointRadius).attr('stroke-width', 0.5);
                             })
-                            .on('click',function(d){
+                            // .on('click',function(d){
                                 
-                            })					
+                            // })					
                     }			
                     
                     //method for the legend
@@ -267,7 +266,6 @@ function renderRadviz(){
         //method to reset the anchor position
         document.getElementById('resetOption').onclick = function() {resetChart()};	
 		function resetChart() {		
-            console.log("here",dimensionAnchor);
             	
 			dimension_anchor = dimensionAnchor.slice();
 			dimensionAnchor_data = dimensions.map(function(dt, i) {
@@ -278,7 +276,9 @@ function renderRadviz(){
                     theta: dimension_anchor[i], 
                     fixed: true
 					};
-			});	
+            });	
+            console.log(data_new, dimensionNamesNormalized, dimension_anchor);
+            
 			calcNodePosition(data_new, dimensionNamesNormalized, dimension_anchor);		
             
             renderRadviz.each(render);

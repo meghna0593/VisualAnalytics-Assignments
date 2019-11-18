@@ -13,21 +13,28 @@
 	<!-- <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script> -->
 	<script type="text/javascript" src="{{ url_for('static', filename='js/radviz-chart.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/heat-map.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/cluster.js') }}"></script>
 </head>
 
 <body onload="getData()">
 	
 	<div class="container" style="width:95%">
 			<div class="row" style="margin-bottom: 10px;">
-					<div class="col-md-12" style="display: flex; justify-content: center;"><h2><b>Assignment 4 : Radviz + HeatMap</b> </h2></div>
+					<div class="col-md-12" style="display: flex; justify-content: center;"><h2><b>Assignment 4 : Radviz + HeatMap + KMeans Cluster</b> </h2></div>
 			</div>
 			<div class="row" style="margin-bottom: 10px;">
 					<div class="col-md-4">
-					<select id="data_options" onchange="getData()">
+					<select id="data_options" onchange="getData(0)">
 						<option value="0">Iris</option>
 						<option value="1">Winequality-red</option>
 						<option value="2">Winequality-white</option>
 					</select></div>
+					<div class="col-md-4">
+					</div>
+					<div class="col-md-4">
+						<input type="text" name="clusternum" id="clusternum">
+						<button id="clusterbtn" onclick="createCluster()">Create Cluster</button>
+					</div>
 			</div>
 			<div class="row" style="margin-bottom: 10px;">
 					<div class="col-md-4"><div id="msg"></div></div>
@@ -57,7 +64,8 @@
 				<div class="col-md-4"></div>
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
-					<button id="defaultOption" onclick="uploadFile(0)">Default RadViz</button>
+					<button id="defaultOption" onclick="getData(1)">RadViz with Class</button>
+					<button id="defaultOption" onclick="getData(2)">Default RadViz</button>
 					<button id="resetOption" onclick="resetChart()">Reset Anchor Positon</button>
 				</div>
 			</div>

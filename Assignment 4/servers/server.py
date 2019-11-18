@@ -5,6 +5,8 @@ import csv
 from collections import OrderedDict
 import pandas
 import numpy as np
+from sklearn.cluster import KMeans
+
 api = Blueprint('api', __name__)
 
 @api.route('/getCsv/<id>', methods=['GET'])
@@ -32,9 +34,11 @@ def getData(id):
 def sendCorrMat():
     col = request.args.get('col')
     fname = request.args.get('file')
+    print("hereeee",col)
     csvFile = ['data/iris.csv','data/winequality-red.csv','data/winequality-white.csv']
     data_df = pandas.read_csv(csvFile[int(fname)])
     fieldnames = (data_df.columns)
+    
     if int(fname) == 0:
         data_df = data_df[data_df.iloc[:,-1]==col]
         data_df = data_df.drop(labels='Class', axis=1)
@@ -54,3 +58,32 @@ def sendCorrMat():
     finalData['metadata'] = (list(fieldnames))[:-1]
     finalData['data'] = corr_data
     return (finalData)
+
+@api.route('/getClusterData', methods=['GET'])
+def sendClusterData():
+    clusternum = request.args.get('clstr')
+    fname = request.args.get('file')
+
+    csvFile = ['data/iris.csv','data/winequality-red.csv','data/winequality-white.csv']
+    data_df = pandas.read_csv(csvFile[int(fname)])
+    fieldnames = (data_df.columns)
+    dataFinal = {}
+    label = ""
+    if int(fname) == 0:
+        target = data_df['Class']
+        data_df = data_df.drop(labels='Class', axis=1)
+        label = 'Class'
+    else:
+        # data_df = data_df[data_df.iloc[:,-1]==int(col)]
+        target = data_df['quality']
+        data_df = data_df.drop(labels='quality', axis=1)
+        label = 'quality'
+
+    kmeans = KMeans(n_clusters=int(clusternum)).fit(data_df)
+    centroids = kmeans.labels_
+    data_df['target'] = target
+    data_df[label] = centroids
+
+    dataFinal['metadata'] = (list(fieldnames))
+    dataFinal['data'] =  data_df.to_json(orient='records')
+    return (dataFinal)
