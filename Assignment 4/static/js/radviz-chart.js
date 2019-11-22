@@ -203,14 +203,14 @@ function renderRadviz(){
                             .attr('stroke', 'black')
                             .attr('stroke-width', 0.3)
                             .on('mouseenter', function(d) {
-                                console.log(d['target']);
                                 let mouse = d3.mouse(this); 
                                 let toolTip = svg.select('g.toolTip').selectAll('text').text(function(dt, i){
                                     return dt + ': ' + d[dt];
                                 }); 
                                 var element = document.getElementById('heat-map')
 	                            element.style.visibility = 'visible'
-                                callHeatMap((d['target']===undefined)?(d['Class']===undefined)?d['quality']:d['Class']:d['target'],document.getElementById("data_options").value)
+                                // callHeatMap((d['cluster']===undefined)?((d['Class']===undefined)?d['quality']:d['Class']):d['cluster'],document.getElementById("data_options").value)
+                                callHeatMap((d['Class']===undefined)?d['quality']:d['Class'],document.getElementById("data_options").value)
                                 svg.select('g.toolTip').attr('transform',  `translate(${margin.left + mouse[0] +20},${margin.top+mouse[1] - 120})`);
 
                                 svg.select('g.toolTip').attr('display', 'block');

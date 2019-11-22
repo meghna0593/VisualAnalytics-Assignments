@@ -4,16 +4,21 @@ import json
 import csv
 from collections import OrderedDict
 import pandas
+import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
+import os
 
 api = Blueprint('api', __name__)
-
 @api.route('/getCsv/<id>', methods=['GET'])
 def getData(id):
     csvFile = ['data/iris.csv','data/winequality-red.csv','data/winequality-white.csv']
     data_df = pandas.read_csv(csvFile[int(id)])
     fieldnames = (data_df.columns)
+    try:
+        os.remove("data/cluster.csv")
+    except:
+        pass
     # print(tuple(fieldnames))
     dataFinal = {}
     data = []
@@ -34,18 +39,21 @@ def getData(id):
 def sendCorrMat():
     col = request.args.get('col')
     fname = request.args.get('file')
-    print("hereeee",col)
-    csvFile = ['data/iris.csv','data/winequality-red.csv','data/winequality-white.csv']
+    csvFile = ['data/iris.csv','data/winequality-red.csv','data/winequality-white.csv','data/cluster.csv']
     data_df = pandas.read_csv(csvFile[int(fname)])
     fieldnames = (data_df.columns)
-    
     if int(fname) == 0:
         data_df = data_df[data_df.iloc[:,-1]==col]
         data_df = data_df.drop(labels='Class', axis=1)
-    else:
+    elif int(fname) !=3:
         data_df = data_df[data_df.iloc[:,-1]==int(col)]
         data_df = data_df.drop(labels='quality', axis=1)
-    print(data_df)
+    else:
+        data_df = data_df[data_df.iloc[:,-1]==int(col)]
+        if hasattr(data_df, 'Class'):
+            data_df = data_df.drop(labels='Class', axis=1)
+        else:
+            data_df = data_df.drop(labels='quality', axis=1)
     data_df = (data_df.corr())
     data_df = np.squeeze(np.asarray(data_df))
     finalData ={}
@@ -70,20 +78,43 @@ def sendClusterData():
     dataFinal = {}
     label = ""
     if int(fname) == 0:
-        target = data_df['Class']
+        # target = data_df['Class']
         data_df = data_df.drop(labels='Class', axis=1)
         label = 'Class'
     else:
         # data_df = data_df[data_df.iloc[:,-1]==int(col)]
-        target = data_df['quality']
+        # target = data_df['quality']
         data_df = data_df.drop(labels='quality', axis=1)
         label = 'quality'
 
     kmeans = KMeans(n_clusters=int(clusternum)).fit(data_df)
     centroids = kmeans.labels_
-    data_df['target'] = target
+    # data_df['target'] = target
     data_df[label] = centroids
-
+    data_df.to_csv('data/cluster.csv')
     dataFinal['metadata'] = (list(fieldnames))
     dataFinal['data'] =  data_df.to_json(orient='records')
     return (dataFinal)
+
+@api.route('/getCategorical', methods=['GET'])
+def sendCategoricalData():
+    data_set = pd.read_csv("data/dataset1_processed.csv")
+    datatype_numeric = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    categoricalValues = data_set.select_dtypes(exclude=datatype_numeric)   
+    finalData ={}
+    finalData['cols'] = list(categoricalValues.columns)
+    return (finalData)
+
+@api.route('/getRadvizData/<id>', methods=['GET'])
+def radvizData(id):
+    data_set = pd.read_csv("data/dataset1_processed.csv")
+    datatype_numeric = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    numericalValues = data_set.select_dtypes(include=datatype_numeric)
+    categoricalValues = data_set.select_dtypes(exclude=datatype_numeric)  
+    targetCat = list(categoricalValues)[int(id)]
+    numericalValues[targetCat] = data_set[targetCat]
+    
+    dataFinal = {}
+    dataFinal['metadata'] = list(numericalValues.columns)
+    dataFinal['data'] =  numericalValues.to_json(orient='records')
+    return dataFinal

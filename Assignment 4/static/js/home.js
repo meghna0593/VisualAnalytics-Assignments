@@ -1,5 +1,5 @@
 var dataOrg = []
-function getData(btn) {
+function getData(btn) {	
 	//to hide heatmap
 	var element = document.getElementById('heat-map')
 	element.style.visibility = 'hidden'
@@ -117,9 +117,34 @@ function createCheckBoxes(labels,num){
 
 }
 
-function sendData(header){
-	console.log(header);
-  
+function displayBonusOpt(n){
+	var element = document.getElementById('heat-map')
+	element.style.visibility = 'hidden'
+	document.getElementById('clusternum').value=''
+	if(document.getElementById('bonusbtn').innerHTML === 'Bonus'){
+		fetch('/getCategorical')
+		.then((resp)=>resp.json())
+		.then(function(data){	
+			console.log(data);
+			var div = document.querySelector("#dropDownOption"),
+			select = document.createElement("select");
+			data['cols'].map((e,i)=>select.options.add( new Option(e,i) ))  
+			div.appendChild(select);
+			document.getElementById('bonusbtn').innerHTML='Create Radviz Plot'
+		})
+	}	
+	else{
+		catId = $('#dropDownOption').children().val()
+		fetch('/getRadvizData/'+catId)
+		.then((resp)=>resp.json())
+		.then(function(data){
+			console.log(JSON.parse(data['data']));
+			uploadFile(99,JSON.parse(data['data']),data['metadata'])
+		})
+	}
+}
+
+function sendData(header){  
 	const radvizId = document.querySelector('#radviz');
 	const colorAccessor = function(d){ return d[header[header.length-1]]; };
 	const dimensions = header.slice(0,header.length-1) //does not contain the last column	

@@ -1,9 +1,11 @@
 function callHeatMap(cls, fname){
-    console.log(cls);
     
+    if(document.getElementById('clusternum').value!=''){
+        fname=String(3)
+    }
+
     var url = '/getCorrMat?col='+cls+'&file='+fname;
-    console.log(url);
-    
+
     fetch(url)
     .then((resp)=>resp.json())
     .then(function(data){
