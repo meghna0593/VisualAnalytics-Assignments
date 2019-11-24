@@ -3,6 +3,8 @@
 
 Code to implement the basic functionality of Radviz Chart using D3.js library.
 
+Go inside the project directory where 'app.py' file is present from a console. To run the project type 'python app.py'
+
 Features Added:
 1. Drop Down with different CSV file selection. 
 2. Correlation Matrix on hovering over the data points.
@@ -12,6 +14,10 @@ Features Added:
 6. On clicking 'RadViz with Class' one can switch back to radviz with classes from clusters.
 7. On selecting a different file using the drop down menu, one can go back to the default chart by clicking 'Default Radviz'
 8. Click on 'Bonus' to view the bonus functionality. Select the categorical columns and click on 'Create Radviz Plot' to create a plot using Assignment 1 processed data.
+
+Libraries Used:
+1. Front-end: High Charts
+2. Back-end: Flask framework
 
 Features from Assignment 2:
 1. Default Radviz Chart on page load 
@@ -31,5 +37,5 @@ References:
 [4] Biovisualize. (n.d.). biovisualize/radviz. Retrieved October 12, 2019, from https://github.com/biovisualize/radviz/blob/master/radviz.js.
 [5] How TO - Display Text when Checkbox is Checked. (n.d.). Retrieved October 12, 2019, from https://www.w3schools.com/howto/howto_js_display_checkbox_text.asp.
 [6] Heat map. Retrieved November 23, 2019, from https://www.highcharts.com/demo/heatmap.
- 
-
+[7] Flask. Retrieved November 22, 2019, from https://www.fullstackpython.com/flask.html.
+[8] sklearn.cluster.KMeans¶. (n.d.). Retrieved from https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html.
