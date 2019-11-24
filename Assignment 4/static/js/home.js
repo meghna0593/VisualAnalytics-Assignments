@@ -16,7 +16,6 @@ function getData(btn) {
     .then(function(data){		
 	dataOrg = JSON.parse(data['data'])
 
-	// data.shift()  {fixed acidity: 7.4, volatile acidity: 0.7, citric acid: 0, residual sugar: 1.9, chlorides: 0.076, …}
 	uploadFile(x,JSON.parse(data['data']),data['metadata'])
     })
   }
@@ -26,46 +25,13 @@ function uploadFile(num, dataX, dataC){
 
 	dataOrg = dataX
     document.getElementById('checkBoxDiv').innerHTML = '';	
-	// msg = "<br>Selected CSV data is:<b>"+dataC[x]+"</b>";
-    // document.getElementById("msg").innerHTML = msg;
     retrieveCsvData(dataC,num)
-	// if(num == 0){
-	// 	console.log("inside");
-		
-	// 	// msg = "<br>Selected CSV file is:<b>winequality-red.csv</b>";
-	// 	// document.getElementById("msg").innerHTML = msg;	
-  //   // retrieveCsvData("data/winequality-red.csv",num);
-  //   retrieveCsvData(dataC,num)
-	// }
-	// else{		
-	// 	// var selectedFile = document.getElementById("csvFile");
-	// 	// document.getElementById('slider').value="100"
-	// 	// var msg=""
-	// 	if('files' in selectedFile){
-	// 		if(selectedFile.files.length==0)
-	// 			msg="Please select a file"
-	// 		else{
-	// 			msg = "<br>Selected CSV file is:<b>"+selectedFile.files[0]["name"]+"</b>";
-	// 			document.getElementById("msg").innerHTML = msg;	
-	// 			// retrieveCsvData("data/"+selectedFile.files[0]["name"]+"",num);
-	// 		}
-	// 	}
-	// }
-	
 }
 
 function retrieveCsvData(csvFile,num){
   
   createCheckBoxes(csvFile,num)
   sendData(csvFile);
-	// d3.csv(csvFile, function(error, data) {
-	// 	if(error) throw(error);
-	// 	dataOrg = data1 = data
-	// 	createCheckBoxes(d3.keys(data[0]),num) //array of cat
-	// 	//sending data to create radviz graph with header details
-	// 	sendData(d3.keys(data[0]));
-		
-	// });
 }
 
 function changeOpacity(){	
@@ -79,7 +45,6 @@ function changeOpacity(){
 function updateAnchor(lastItem){
 	var checkedItems = document.getElementsByName('checkbx')
 	var headerUpdate = [];
-	// console.log(data1[0]);
 	
 	for (var i=0; i<checkedItems.length; i++) {
 	   if (checkedItems[i].checked) {
@@ -117,11 +82,13 @@ function createCheckBoxes(labels,num){
 
 }
 
-function displayBonusOpt(n){
+//Bonus functionality
+function displayBonusOpt(){
 	var element = document.getElementById('heat-map')
 	element.style.visibility = 'hidden'
 	document.getElementById('clusternum').value=''
 	if(document.getElementById('bonusbtn').innerHTML === 'Bonus'){
+		//getting a list of categorical data for the drop down menu
 		fetch('/getCategorical')
 		.then((resp)=>resp.json())
 		.then(function(data){	
@@ -135,6 +102,7 @@ function displayBonusOpt(n){
 	}	
 	else{
 		catId = $('#dropDownOption').children().val()
+		//calling api for creating radviz plot from processed dataset (Assignment 1)
 		fetch('/getRadvizData/'+catId)
 		.then((resp)=>resp.json())
 		.then(function(data){
@@ -144,6 +112,7 @@ function displayBonusOpt(n){
 	}
 }
 
+//Sending data to plot Radviz
 function sendData(header){  
 	const radvizId = document.querySelector('#radviz');
 	const colorAccessor = function(d){ return d[header[header.length-1]]; };

@@ -207,10 +207,12 @@ function renderRadviz(){
                                 let toolTip = svg.select('g.toolTip').selectAll('text').text(function(dt, i){
                                     return dt + ': ' + d[dt];
                                 }); 
-                                var element = document.getElementById('heat-map')
-	                            element.style.visibility = 'visible'
-                                // callHeatMap((d['cluster']===undefined)?((d['Class']===undefined)?d['quality']:d['Class']):d['cluster'],document.getElementById("data_options").value)
-                                callHeatMap((d['Class']===undefined)?d['quality']:d['Class'],document.getElementById("data_options").value)
+                                if(d['Class']!==undefined || d['quality']!==undefined){
+                                    var element = document.getElementById('heat-map')
+                                    element.style.visibility = 'visible'
+                                }
+                                
+                                callHeatMap((d['Class']===undefined)?(d['quality']===undefined)?'':d['quality']:d['Class'],document.getElementById("data_options").value)
                                 svg.select('g.toolTip').attr('transform',  `translate(${margin.left + mouse[0] +20},${margin.top+mouse[1] - 120})`);
 
                                 svg.select('g.toolTip').attr('display', 'block');
@@ -361,11 +363,5 @@ function renderRadviz(){
 
 
 /*
- * ***References***
- *
- * [1] Process local csv file example. (n.d.). Retrieved October 12, 2019, from http://bl.ocks.org/hlvoorhees/9d58e173825aed1e0218. 
- * [2] File Upload TryIt Editor. (n.d.). Retrieved October 12, 2019, from https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_fileupload_files.
- * [3] WYanChao. (n.d.). WYanChao/RadViz. Retrieved October 12, 2019, from https://github.com/WYanChao/RadViz/blob/master/index.js.
- * [4] Biovisualize. (n.d.). biovisualize/radviz. Retrieved October 12, 2019, from https://github.com/biovisualize/radviz/blob/master/radviz.js.
- * [5] How TO - Display Text when Checkbox is Checked. (n.d.). Retrieved October 12, 2019, from https://www.w3schools.com/howto/howto_js_display_checkbox_text.asp.
+ * [1] WYanChao. (n.d.). WYanChao/RadViz. Retrieved October 12, 2019, from https://github.com/WYanChao/RadViz/blob/master/index.js.
  */

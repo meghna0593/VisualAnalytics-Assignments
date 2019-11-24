@@ -19,7 +19,7 @@ def getData(id):
         os.remove("data/cluster.csv")
     except:
         pass
-    # print(tuple(fieldnames))
+
     dataFinal = {}
     data = []
     dataFinal['metadata'] = list(fieldnames)
@@ -30,7 +30,6 @@ def getData(id):
             for field in fieldnames:
                 entry[field] = rows[field]
             data.append(entry)
-    print(data[0])
     data = json.dumps(data[1:])
     dataFinal['data'] = data
     return (dataFinal)
@@ -78,20 +77,17 @@ def sendClusterData():
     dataFinal = {}
     label = ""
     if int(fname) == 0:
-        # target = data_df['Class']
         data_df = data_df.drop(labels='Class', axis=1)
         label = 'Class'
     else:
-        # data_df = data_df[data_df.iloc[:,-1]==int(col)]
-        # target = data_df['quality']
         data_df = data_df.drop(labels='quality', axis=1)
         label = 'quality'
-
     kmeans = KMeans(n_clusters=int(clusternum)).fit(data_df)
     centroids = kmeans.labels_
-    # data_df['target'] = target
+
     data_df[label] = centroids
-    data_df.to_csv('data/cluster.csv')
+    
+    data_df.to_csv('data/cluster.csv',index=False)
     dataFinal['metadata'] = (list(fieldnames))
     dataFinal['data'] =  data_df.to_json(orient='records')
     return (dataFinal)

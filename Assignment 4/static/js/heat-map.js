@@ -1,19 +1,26 @@
 function callHeatMap(cls, fname){
-    
-    if(document.getElementById('clusternum').value!=''){
+    if(document.getElementById('clusternum').value!==''){
         fname=String(3)
     }
+    console.log(cls,fname);
+        
+    if(cls!==''){    
+            
+        var url = '/getCorrMat?col='+cls+'&file='+fname;
+        //calling api to fetch data for correlation matrix
+        fetch(url)
+        .then((resp)=>resp.json())
+        .then(function(data){
+            console.log(data);
+            
+            renderHeatMap(data)
+        })
+    }
 
-    var url = '/getCorrMat?col='+cls+'&file='+fname;
-
-    fetch(url)
-    .then((resp)=>resp.json())
-    .then(function(data){
-        renderHeatMap(data)
-    })
 }
 
-function renderHeatMap(data){
+//Creating Correlation Matrix
+function renderHeatMap(data){    
     Highcharts.chart('heat-map', {
 
         chart: {
@@ -40,8 +47,8 @@ function renderHeatMap(data){
     
         colorAxis: {
             min: 0,
-            minColor: '#FFFFFF',
-            maxColor: Highcharts.getOptions().colors[0]
+            minColor: '#ff0045',
+            maxColor: '#ffba00'
         },
     
         legend: {
@@ -55,13 +62,13 @@ function renderHeatMap(data){
     
         tooltip: {
             formatter: function () {
-                return '<b>' + this.series.xAxis.categories[this.point.x] + '</b> sold <br><b>' +
-                    this.point.value + '</b> items on <br><b>' + this.series.yAxis.categories[this.point.y] + '</b>';
+                return '<b>' + this.series.xAxis.categories[this.point.x] + ' vs ' +
+                    this.series.yAxis.categories[this.point.y] + this.point.value+'</b>';
             }
         },
     
         series: [{
-            name: 'Corr mat',
+            name: 'Correlation matrix',
             borderWidth: 1,
             data: data['data'],
             dataLabels: {
@@ -89,3 +96,7 @@ function renderHeatMap(data){
     
     });
 }
+
+/**
+ * [1] Heat map. Retrieved November 23, 2019, from https://www.highcharts.com/demo/heatmap.
+ */
